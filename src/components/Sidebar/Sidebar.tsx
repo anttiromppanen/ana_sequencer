@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import {
+  FolderIcon,
+  MusicalNoteIcon,
+  FolderOpenIcon,
+} from "@heroicons/react/16/solid";
 import allClapSounds from "../../helpers/importClap";
 
 function DraggableListItem({ name, url }: { name: string; url: string }) {
@@ -20,22 +25,45 @@ function DraggableListItem({ name, url }: { name: string; url: string }) {
   }, [name, url]);
 
   return (
-    <li ref={listItemRef} className={dragging ? "opacity-20" : ""}>
+    <li
+      ref={listItemRef}
+      className={`cursor-pointer ${dragging && "opacity-20"}`}
+    >
       {name}
     </li>
   );
 }
 
 function Sidebar() {
+  const [isSublistOpen, setIsSublistOpen] = useState(false);
+
   return (
-    <div className="bg-userSidebarBg flex flex-col p-4">
+    <div className="bg-userSidebarBg flex flex-col p-3 text-lg">
       <ul>
-        <li>Claps</li>
-        <ul className="ml-4">
-          {allClapSounds.map(({ name, url }) => (
-            <DraggableListItem key={name} name={name} url={url} />
-          ))}
-        </ul>
+        <li className="">
+          <button
+            type="button"
+            onClick={() => setIsSublistOpen((state) => !state)}
+            className="flex items-center gap-x-1 p-2"
+          >
+            {isSublistOpen ? (
+              <FolderIcon className="text-userSequenceButtonYellow/90 size-4" />
+            ) : (
+              <FolderOpenIcon className="text-userSequenceButtonYellow/90 size-4" />
+            )}
+            Claps
+          </button>
+        </li>
+        {isSublistOpen && (
+          <ul className="-mt-2 ml-4 text-base">
+            {allClapSounds.map(({ name, url }) => (
+              <div key={name} className="flex items-center gap-x-2">
+                <MusicalNoteIcon className="size-3" />
+                <DraggableListItem key={name} name={name} url={url} />
+              </div>
+            ))}
+          </ul>
+        )}
       </ul>
     </div>
   );

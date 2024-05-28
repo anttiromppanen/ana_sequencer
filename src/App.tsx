@@ -5,6 +5,7 @@ import {
   monitorForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { v4 as uuid } from "uuid";
+import { PauseIcon, PlayIcon } from "@heroicons/react/16/solid";
 import { soundPack1 as samples } from "./helpers/importSounds";
 import Sidebar from "./components/Sidebar/Sidebar";
 import useSampleColorPicker from "./hooks/useSampleColorPicker";
@@ -20,7 +21,6 @@ function App() {
   const stepsRef = useRef([[]]);
   const seqRef = useRef(null);
   const draggableContainerRef = useRef(null);
-  const { color, handleGetNextColor } = useSampleColorPicker();
 
   const stepIds = useMemo(() => [...Array(numOfSteps).keys()] as const, []);
 
@@ -44,13 +44,13 @@ function App() {
         },
       }).toDestination(),
     }));
+
     seqRef.current = new Tone.Sequence(
       (time, step) => {
         tracksRef.current.map((trk) => {
           if (stepsRef.current[trk.id]?.[step]?.checked) {
             trk.sampler.triggerAttack("A1", time);
           }
-          // lampsRef.current[step].checked = true;
           if (!stepsRef.current[trk.id][step].checked)
             stepsRef.current[trk.id][step].style.filter = "brightness(1.2)";
           else
@@ -121,17 +121,33 @@ function App() {
     });
   }, []);
 
+  const updateSamplerVolume = (id, volume) => {
+    const track = tracksRef.current.find((trk) => trk.id === id);
+    if (track) {
+      track.sampler.volume.value = volume;
+    }
+  };
+
   return (
-    <div className="grid min-h-screen w-full grid-cols-[300px_1fr] text-white">
+    <div className="grid min-h-screen w-full grid-cols-[250px_1fr] text-slate-200">
       {/* SIDEBAR */}
       <Sidebar />
       <div
         ref={draggableContainerRef}
-        className={`flex w-full flex-col gap-y-1 ${isDraggedOver && "bg-userBgColor/95 brightness-150"}`}
+        className={`flex w-full flex-col gap-y-1 overflow-y-scroll pb-20 pt-4 ${isDraggedOver && "bg-userBgColor/95 brightness-150"}`}
       >
-        <div className="px-4 py-2">
-          <button type="button" onClick={handleStartClick}>
-            Play
+        <div className="ml-2 px-4 py-2 text-xl font-medium">
+          <button
+            type="button"
+            onClick={handleStartClick}
+            className="flex items-center gap-x-1"
+          >
+            {isPlaying ? (
+              <PauseIcon className="size-5" />
+            ) : (
+              <PlayIcon className="size-5" />
+            )}
+            {isPlaying ? "Pause" : "Play"}
           </button>
         </div>
         <div className="flex flex-col gap-y-1 p-4">
@@ -142,6 +158,7 @@ function App() {
               stepIds={stepIds}
               stepsRef={stepsRef}
               trackId={trackId}
+              updateSamplerVolume={updateSamplerVolume}
             />
           ))}
         </div>
