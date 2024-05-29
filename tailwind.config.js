@@ -3,7 +3,10 @@ module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      fontFamily: {},
+      fontFamily: {
+        sans: ["Roboto", "sans-serif"],
+        userDisplayFont: ["Sixtyfour", "sans-serif"],
+      },
       colors: {
         userBgColor: "#414141",
         userSidebarBg: "#525252",

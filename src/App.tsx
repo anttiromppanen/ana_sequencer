@@ -4,12 +4,10 @@ import {
   dropTargetForElements,
   monitorForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { v4 as uuid } from "uuid";
 import { PauseIcon, PlayIcon } from "@heroicons/react/16/solid";
 import { soundPack1 as samples } from "./helpers/importSounds";
 import Sidebar from "./components/Sidebar/Sidebar";
-import useSampleColorPicker from "./hooks/useSampleColorPicker";
-import SequencerRow from "./components/SequencerRow";
+import SequencerRow from "./components/SequencerRow/SequencerRow";
 
 const numOfSteps = 16;
 
@@ -36,14 +34,20 @@ function App() {
   };
 
   useEffect(() => {
-    tracksRef.current = activeSamples.map((sample, i) => ({
-      id: i,
-      sampler: new Tone.Sampler({
-        urls: {
-          A1: sample.url,
-        },
-      }).toDestination(),
-    }));
+    tracksRef.current = activeSamples.map((sample, i) => {
+      const reverb = new Tone.JCReverb(0).toDestination();
+      const distortion = new Tone.Distortion(0).toDestination();
+      return {
+        id: i,
+        effects: { Reverb: reverb, Distortion: distortion },
+        sampler: new Tone.Sampler({
+          urls: {
+            A1: sample.url,
+          },
+          volume: -50,
+        }).fan(reverb, distortion),
+      };
+    });
 
     seqRef.current = new Tone.Sequence(
       (time, step) => {
@@ -104,6 +108,7 @@ function App() {
           setActiveSamples((state) => [...state, source.data]);
         },
       }),
+
     [activeSamples],
   );
 
@@ -157,6 +162,7 @@ function App() {
               name={name}
               stepIds={stepIds}
               stepsRef={stepsRef}
+              tracksRef={tracksRef}
               trackId={trackId}
               updateSamplerVolume={updateSamplerVolume}
             />
