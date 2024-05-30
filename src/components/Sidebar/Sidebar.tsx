@@ -46,7 +46,7 @@ function ListItem({ name, sounds }: { name: string; sounds: ISound[] }) {
         className="flex items-center gap-x-1 p-2"
       >
         {isSublistOpen ? (
-          <FolderIcon className="size-4 text-userSequenceButtonYellow/90" />
+          <FolderIcon className="size-4 text-userSequenceButtonYellow/80" />
         ) : (
           <FolderOpenIcon className="size-4 text-userSequenceButtonYellow/90" />
         )}
@@ -68,10 +68,14 @@ function ListItem({ name, sounds }: { name: string; sounds: ISound[] }) {
 
 function Sidebar() {
   return (
-    <div className="bg-userGray8 flex flex-col p-3 text-lg">
+    <div className="flex flex-col bg-userGray8 p-3 text-lg">
       <ul>
         {allSounds.map(([name, sounds]) => (
-          <ListItem name={name as string} sounds={sounds as ISound[]} />
+          <ListItem
+            key={name as string}
+            name={name as string}
+            sounds={sounds as ISound[]}
+          />
         ))}
         {/*
          */}

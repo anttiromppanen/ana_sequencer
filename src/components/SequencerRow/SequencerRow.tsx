@@ -53,7 +53,7 @@ function SequencerRow({
 
   return (
     <div className="rounded-md bg-userGray8 p-2">
-      <div key={name} className="grid grid-cols-[250px_1fr] gap-1">
+      <div key={name} className="grid grid-cols-[250px_1fr] gap-2">
         {/* LEFT SIDE INPUTS */}
         <div className="flex flex-col justify-center">
           <div className="flex items-center justify-between gap-x-3 px-2">
@@ -86,7 +86,7 @@ function SequencerRow({
               max={20}
               value={volumeValue}
               onChange={(e) => setVolumeValue(Number(e.target.value))}
-              className="w-full"
+              className="w-full [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-userGray9"
             />
           </div>
         </div>

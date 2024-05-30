@@ -28,27 +28,38 @@ function EffectToggle({
           ${wetValue > 0 && "bg-green-500 shadow-[0px_0px_10px_2px_rgba(64,255,0,1),inset_10px_10px_71px_8px_rgba(64,255,0,1)]"}
         `}
       />
-      <input
-        type="range"
-        name="effectRange"
-        id="effectRange"
-        min={0}
-        max={1}
-        step={0.01}
-        value={effectValue}
-        onChange={(e) => setEffectValue(Number(e.target.value))}
-      />
-      <input
-        type="range"
-        name="wetRange"
-        id="wetRange"
-        min={0}
-        max={1}
-        step={0.01}
-        value={wetValue}
-        onChange={(e) => setWetValue(Number(e.target.value))}
-      />
-      {name}
+      <div className="flex flex-col items-center gap-y-1">
+        <input
+          type="range"
+          name="effectRange"
+          id="effectRange"
+          min={0}
+          max={1}
+          step={0.01}
+          value={effectValue}
+          onChange={(e) => setEffectValue(Number(e.target.value))}
+        />
+        <p className="text-xs font-bold tracking-widest text-slate-400">
+          EFFECT
+        </p>
+      </div>
+      <div className="flex flex-col items-center gap-y-1">
+        <input
+          type="range"
+          name="wetRange"
+          id="wetRange"
+          min={0}
+          max={1}
+          step={0.01}
+          value={wetValue}
+          onChange={(e) => setWetValue(Number(e.target.value))}
+          className="w-full"
+        />
+        <p className="text-xs font-bold tracking-widest text-slate-400">
+          VOLUME
+        </p>
+      </div>
+      <p className="font-medium text-slate-200">{name}</p>
     </div>
   );
 }
