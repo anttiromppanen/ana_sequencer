@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  DetailedHTMLProps,
+  InputHTMLAttributes,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import * as Tone from "tone";
 import {
   dropTargetForElements,
@@ -8,6 +15,7 @@ import { PauseIcon, PlayIcon } from "@heroicons/react/16/solid";
 import { soundPack1 as samples } from "./helpers/importSounds";
 import Sidebar from "./components/Sidebar/Sidebar";
 import SequencerRow from "./components/SequencerRow/SequencerRow";
+import { ITrack } from "./types/types";
 
 const numOfSteps = 16;
 
@@ -15,9 +23,9 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeSamples, setActiveSamples] = useState(samples);
   const [isDraggedOver, setIsDraggedOver] = useState(false);
-  const tracksRef = useRef([]);
+  const tracksRef = useRef<ITrack[]>([]);
   const stepsRef = useRef([[]]);
-  const seqRef = useRef(null);
+  const seqRef = useRef<Tone.Sequence | null>(null);
   const draggableContainerRef = useRef(null);
 
   const stepIds = useMemo(() => [...Array(numOfSteps).keys()] as const, []);
@@ -34,9 +42,14 @@ function App() {
   };
 
   useEffect(() => {
+    // tone.js sampler
     tracksRef.current = activeSamples.map((sample, i) => {
-      const reverb = new Tone.JCReverb(0).toDestination();
-      const distortion = new Tone.Distortion(0).toDestination();
+      const reverb = new Tone.Reverb({ decay: 0.5, wet: 0 }).toDestination();
+      const distortion = new Tone.Distortion({
+        distortion: 0.5,
+        wet: 0,
+      }).toDestination();
+
       return {
         id: i,
         effects: { Reverb: reverb, Distortion: distortion },
@@ -44,39 +57,68 @@ function App() {
           urls: {
             A1: sample.url,
           },
-          volume: -50,
+          volume: -10,
         }).fan(reverb, distortion),
       };
     });
 
+    // tone.js sequence loop
     seqRef.current = new Tone.Sequence(
       (time, step) => {
+        // loops the sequencer buttons by column
         tracksRef.current.map((trk) => {
-          if (stepsRef.current[trk.id]?.[step]?.checked) {
+          const sequencerColumnButton = stepsRef.current[trk.id][
+            step
+          ] as DetailedHTMLProps<
+            InputHTMLAttributes<HTMLInputElement>,
+            HTMLInputElement
+          >;
+
+          if (sequencerColumnButton.checked) {
             trk.sampler.triggerAttack("A1", time);
           }
-          if (!stepsRef.current[trk.id][step].checked)
-            stepsRef.current[trk.id][step].style.filter = "brightness(1.2)";
-          else
-            stepsRef.current[trk.id][step].style.background =
-              "rgba(255,255,255,0.9)";
+
+          if (!sequencerColumnButton.style) sequencerColumnButton.style = {};
+
+          if (!sequencerColumnButton.checked)
+            sequencerColumnButton.style.filter = "brightness(1.2)";
+          else sequencerColumnButton.style.background = "rgba(255,255,255,0.9)";
+
+          return undefined;
         });
 
         if (step > 0) {
           tracksRef.current.forEach((trk) => {
-            if (!stepsRef.current[trk.id][step - 1].checked)
-              stepsRef.current[trk.id][step - 1].style.filter = "brightness(1)";
-            else stepsRef.current[trk.id][step - 1].style.background = "";
+            const previousSequencerButton = stepsRef.current[trk.id][
+              step - 1
+            ] as DetailedHTMLProps<
+              InputHTMLAttributes<HTMLInputElement>,
+              HTMLInputElement
+            >;
+
+            if (!previousSequencerButton.style)
+              previousSequencerButton.style = {};
+
+            if (!previousSequencerButton.checked)
+              previousSequencerButton.style.filter = "brightness(1)";
+            else previousSequencerButton.style.background = "";
           });
         } else {
           // If we are at step 0, reset the last step's background color
           tracksRef.current.forEach((trk) => {
-            if (!stepsRef.current[trk.id][stepIds.length - 1].checked)
-              stepsRef.current[trk.id][stepIds.length - 1].style.filter =
-                "brightness(1)";
-            else
-              stepsRef.current[trk.id][stepIds.length - 1].style.background =
-                "";
+            const lastColumnSequencerButton = stepsRef.current[trk.id][
+              stepIds.length - 1
+            ] as DetailedHTMLProps<
+              InputHTMLAttributes<HTMLInputElement>,
+              HTMLInputElement
+            >;
+
+            if (!lastColumnSequencerButton.style)
+              lastColumnSequencerButton.style = {};
+
+            if (!lastColumnSequencerButton.checked)
+              lastColumnSequencerButton.style.filter = "brightness(1)";
+            else lastColumnSequencerButton.style.background = "";
           });
         }
       },

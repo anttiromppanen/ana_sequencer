@@ -5,7 +5,7 @@ import {
   MusicalNoteIcon,
   FolderOpenIcon,
 } from "@heroicons/react/16/solid";
-import allClapSounds from "../../helpers/importClap";
+import allClapSounds from "../../helpers/sounds/importClapSounds";
 
 function DraggableListItem({ name, url }: { name: string; url: string }) {
   const listItemRef = useRef(null);
@@ -38,7 +38,7 @@ function Sidebar() {
   const [isSublistOpen, setIsSublistOpen] = useState(false);
 
   return (
-    <div className="bg-userSidebarBg flex flex-col p-3 text-lg">
+    <div className="flex flex-col bg-userSidebarBg p-3 text-lg">
       <ul>
         <li className="">
           <button
@@ -47,9 +47,9 @@ function Sidebar() {
             className="flex items-center gap-x-1 p-2"
           >
             {isSublistOpen ? (
-              <FolderIcon className="text-userSequenceButtonYellow/90 size-4" />
+              <FolderIcon className="size-4 text-userSequenceButtonYellow/90" />
             ) : (
-              <FolderOpenIcon className="text-userSequenceButtonYellow/90 size-4" />
+              <FolderOpenIcon className="size-4 text-userSequenceButtonYellow/90" />
             )}
             Claps
           </button>
