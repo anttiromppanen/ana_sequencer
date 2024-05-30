@@ -1,8 +1,8 @@
-import { ISound } from "./importAllSounds";
 import crash_808 from "../../assets/sounds/crash/crash-808.wav";
 import crash_acoustic from "../../assets/sounds/crash/crash-acoustic.wav";
 import crash_noise from "../../assets/sounds/crash/crash-noise.wav";
 import crash_tape from "../../assets/sounds/crash/crash-tape.wav";
+import { ISound } from "../../types/types";
 
 const allCrashSounds: ISound[] = [
   { name: "crash_808", url: crash_808 },

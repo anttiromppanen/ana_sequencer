@@ -20,7 +20,7 @@ import snare_sumo from "../../assets/sounds/snare/snare-sumo.wav";
 import snare_tape from "../../assets/sounds/snare/snare-tape.wav";
 import snare_vinyl01 from "../../assets/sounds/snare/snare-vinyl01.wav";
 import snare_vinyl02 from "../../assets/sounds/snare/snare-vinyl02.wav";
-import { ISound } from "./importAllSounds";
+import { ISound } from "../../types/types";
 
 const allSnareSounds: ISound[] = [
   { name: "snare_808", url: snare_808 },

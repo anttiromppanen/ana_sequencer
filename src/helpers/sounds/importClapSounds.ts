@@ -4,7 +4,7 @@ import clap_crushed from "../../assets/sounds/clap/clap-crushed.wav";
 import clap_fat from "../../assets/sounds/clap/clap-fat.wav";
 import clap_slapper from "../../assets/sounds/clap/clap-slapper.wav";
 import clap_tape from "../../assets/sounds/clap/clap-tape.wav";
-import { ISound } from "./importAllSounds";
+import { ISound } from "../../types/types";
 
 const allClapSounds: ISound[] = [
   { name: "clap_808", url: clap_808 },

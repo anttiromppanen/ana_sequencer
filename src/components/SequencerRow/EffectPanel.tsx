@@ -1,18 +1,26 @@
-/* eslint-disable no-lone-blocks */
-import { useEffect, useState } from "react";
+/* eslint-disable no-param-reassign */
+import { MutableRefObject, useEffect, useState } from "react";
+import { Distortion, Reverb } from "tone";
+import { ITrack } from "../../types/types";
 
-function EffectToggle({ name, effect }) {
+function EffectToggle({
+  name,
+  effect,
+}: {
+  name: string;
+  effect: Distortion | Reverb;
+}) {
   const [effectValue, setEffectValue] = useState(0.5);
   const [wetValue, setWetValue] = useState(0);
 
   useEffect(() => {
     if (!effect) return;
-    if (name === "Distortion") effect.distortion = effectValue;
+    if (effect instanceof Distortion) effect.distortion = effectValue;
     effect.wet.value = wetValue;
   }, [effectValue, effect, name, wetValue]);
 
   return (
-    <div className="flex flex-col items-center gap-y-2 rounded-md bg-userBgColor p-2 tracking-wider text-zinc-300">
+    <div className="flex flex-col items-center gap-y-2 rounded-md bg-userGray8 p-2 tracking-wider text-zinc-300">
       <div
         className={`
           size-3 self-start rounded-full bg-red-600 shadow-[0px_0px_10px_2px_rgba(255,0,0,0.7),inset_10px_10px_71px_8px_rgba(255,0,0,1)]
@@ -45,14 +53,22 @@ function EffectToggle({ name, effect }) {
   );
 }
 
-function EffectPanel({ trackId, tracksRef }) {
+function EffectPanel({
+  trackId,
+  tracksRef,
+}: {
+  trackId: number;
+  tracksRef: MutableRefObject<ITrack[]>;
+}) {
   const currentTrack =
     tracksRef.current && tracksRef.current.find((x) => x.id === trackId);
+
+  if (!currentTrack?.effects) return undefined;
 
   const { effects } = currentTrack;
 
   return (
-    <div className="my-2 flex gap-x-4 rounded-md bg-userSidebarBg p-2">
+    <div className="mt-2 flex gap-x-4 rounded-md bg-userGray9 p-4">
       {Object.entries(effects).map(([name, effect]) => (
         <EffectToggle key={name} name={name} effect={effect} />
       ))}

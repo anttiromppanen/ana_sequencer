@@ -8,7 +8,9 @@ module.exports = {
         userDisplayFont: ["Sixtyfour", "sans-serif"],
       },
       colors: {
-        userBgColor: "#414141",
+        userGray9: "#222831",
+        userGray8: "#31363F",
+        userGray7: "#696969",
         userSidebarBg: "#525252",
         userSequenceButtonBlue: "#00bbf9",
         userSequenceButtonMint: "#00f5d4",

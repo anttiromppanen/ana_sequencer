@@ -3,7 +3,7 @@ import openhat_acoustic01 from "../../assets/sounds/openhat/openhat-acoustic01.w
 import openhat_analog from "../../assets/sounds/openhat/openhat-analog.wav";
 import openhat_slick from "../../assets/sounds/openhat/openhat-slick.wav";
 import openhat_tight from "../../assets/sounds/openhat/openhat-tight.wav";
-import { ISound } from "./importAllSounds";
+import { ISound } from "../../types/types";
 
 const allOpenHatSounds: ISound[] = [
   { name: "openhat_808", url: openhat_808 },

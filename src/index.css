@@ -5,6 +5,6 @@
 
 @layer base {
   html {
-    @apply bg-userBgColor;
+    @apply bg-userGray9;
   }
 }

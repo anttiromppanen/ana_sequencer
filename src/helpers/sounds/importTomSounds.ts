@@ -7,7 +7,7 @@ import tom_fm from "../../assets/sounds/tom/tom-fm.wav";
 import tom_lofi from "../../assets/sounds/tom/tom-lofi.wav";
 import tom_rototom from "../../assets/sounds/tom/tom-rototom.wav";
 import tom_short from "../../assets/sounds/tom/tom-short.wav";
-import { ISound } from "./importAllSounds";
+import { ISound } from "../../types/types";
 
 const allTomSounds: ISound[] = [
   { name: "tom_808", url: tom_808 },

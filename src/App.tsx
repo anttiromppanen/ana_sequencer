@@ -1,30 +1,23 @@
 import {
-  DetailedHTMLProps,
-  InputHTMLAttributes,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import * as Tone from "tone";
-import {
   dropTargetForElements,
   monitorForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { PauseIcon, PlayIcon } from "@heroicons/react/16/solid";
-import { soundPack1 as samples } from "./helpers/importSounds";
-import Sidebar from "./components/Sidebar/Sidebar";
+import { useEffect, useMemo, useRef, useState } from "react";
+import * as Tone from "tone";
 import SequencerRow from "./components/SequencerRow/SequencerRow";
+import Sidebar from "./components/Sidebar/Sidebar";
+import { ISoundPack, soundPack1 as samples } from "./helpers/importSounds";
 import { ITrack } from "./types/types";
 
-const numOfSteps = 16;
+const numOfSteps = 36;
 
 function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeSamples, setActiveSamples] = useState(samples);
   const [isDraggedOver, setIsDraggedOver] = useState(false);
   const tracksRef = useRef<ITrack[]>([]);
-  const stepsRef = useRef([[]]);
+  const stepsRef = useRef<HTMLInputElement[][]>([[]]);
   const seqRef = useRef<Tone.Sequence | null>(null);
   const draggableContainerRef = useRef(null);
 
@@ -69,19 +62,14 @@ function App() {
         tracksRef.current.map((trk) => {
           const sequencerColumnButton = stepsRef.current[trk.id][
             step
-          ] as DetailedHTMLProps<
-            InputHTMLAttributes<HTMLInputElement>,
-            HTMLInputElement
-          >;
+          ] as HTMLInputElement;
 
           if (sequencerColumnButton.checked) {
             trk.sampler.triggerAttack("A1", time);
           }
 
-          if (!sequencerColumnButton.style) sequencerColumnButton.style = {};
-
           if (!sequencerColumnButton.checked)
-            sequencerColumnButton.style.filter = "brightness(1.2)";
+            sequencerColumnButton.style.filter = "brightness(1.5)";
           else sequencerColumnButton.style.background = "rgba(255,255,255,0.9)";
 
           return undefined;
@@ -91,13 +79,7 @@ function App() {
           tracksRef.current.forEach((trk) => {
             const previousSequencerButton = stepsRef.current[trk.id][
               step - 1
-            ] as DetailedHTMLProps<
-              InputHTMLAttributes<HTMLInputElement>,
-              HTMLInputElement
-            >;
-
-            if (!previousSequencerButton.style)
-              previousSequencerButton.style = {};
+            ] as HTMLInputElement;
 
             if (!previousSequencerButton.checked)
               previousSequencerButton.style.filter = "brightness(1)";
@@ -108,13 +90,7 @@ function App() {
           tracksRef.current.forEach((trk) => {
             const lastColumnSequencerButton = stepsRef.current[trk.id][
               stepIds.length - 1
-            ] as DetailedHTMLProps<
-              InputHTMLAttributes<HTMLInputElement>,
-              HTMLInputElement
-            >;
-
-            if (!lastColumnSequencerButton.style)
-              lastColumnSequencerButton.style = {};
+            ] as HTMLInputElement;
 
             if (!lastColumnSequencerButton.checked)
               lastColumnSequencerButton.style.filter = "brightness(1)";
@@ -130,7 +106,7 @@ function App() {
 
     return () => {
       seqRef.current?.dispose();
-      tracksRef.current.map((trk) => void trk.sampler.dispose());
+      tracksRef.current.map((trk) => trk.sampler.dispose());
     };
   }, [stepIds, activeSamples]);
 
@@ -145,9 +121,9 @@ function App() {
           }
 
           const names = activeSamples.map((x) => x.name);
-          if (names.includes(source.data.name)) return;
+          if (names.includes(source.data.name as string)) return;
 
-          setActiveSamples((state) => [...state, source.data]);
+          setActiveSamples((state) => [...state, source.data] as ISoundPack[]);
         },
       }),
 
@@ -161,14 +137,13 @@ function App() {
 
     return dropTargetForElements({
       element: el,
-      getData: () => ({ location }),
       onDragEnter: () => setIsDraggedOver(true),
       onDragLeave: () => setIsDraggedOver(false),
       onDrop: () => setIsDraggedOver(false),
     });
   }, []);
 
-  const updateSamplerVolume = (id, volume) => {
+  const updateSamplerVolume = (id: number, volume: number) => {
     const track = tracksRef.current.find((trk) => trk.id === id);
     if (track) {
       track.sampler.volume.value = volume;
@@ -181,7 +156,7 @@ function App() {
       <Sidebar />
       <div
         ref={draggableContainerRef}
-        className={`flex w-full flex-col gap-y-1 overflow-y-scroll pb-20 pt-4 ${isDraggedOver && "bg-userBgColor/95 brightness-150"}`}
+        className={`flex w-full flex-col gap-y-1 overflow-y-scroll pb-20 pt-4 ${isDraggedOver && "bg-userGray9/95 brightness-150"}`}
       >
         <div className="ml-2 px-4 py-2 text-xl font-medium">
           <button
@@ -197,7 +172,7 @@ function App() {
             {isPlaying ? "Pause" : "Play"}
           </button>
         </div>
-        <div className="flex flex-col gap-y-1 p-4">
+        <div className="flex flex-col gap-y-2 bg-userGray9 p-4">
           {activeSamples.map(({ name }, trackId) => (
             <SequencerRow
               key={name}

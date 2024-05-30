@@ -8,7 +8,7 @@ import perc_short from "../../assets/sounds/perc/perc-short.wav";
 import perc_tambo from "../../assets/sounds/perc/perc-tambo.wav";
 import perc_tribal from "../../assets/sounds/perc/perc-tribal.wav";
 import perc_weirdo from "../../assets/sounds/perc/perc-weirdo.wav";
-import { ISound } from "./importAllSounds";
+import { ISound } from "../../types/types";
 
 const allPercSounds: ISound[] = [
   { name: "perc_808", url: perc_808 },

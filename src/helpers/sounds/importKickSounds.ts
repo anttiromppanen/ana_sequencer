@@ -1,4 +1,3 @@
-import { ISound } from "./importAllSounds";
 import kick_808 from "../../assets/sounds/kick/kick-808.wav";
 import kick_acoustic01 from "../../assets/sounds/kick/kick-acoustic01.wav";
 import kick_acoustic02 from "../../assets/sounds/kick/kick-acoustic02.wav";
@@ -25,6 +24,7 @@ import kick_tron from "../../assets/sounds/kick/kick-tron.wav";
 import kick_vinyl01 from "../../assets/sounds/kick/kick-vinyl01.wav";
 import kick_vinyl02 from "../../assets/sounds/kick/kick-vinyl02.wav";
 import kick_zapper from "../../assets/sounds/kick/kick-zapper.wav";
+import { ISound } from "../../types/types";
 
 const allKickSounds: ISound[] = [
   { name: "kick_808", url: kick_808 },

@@ -9,7 +9,7 @@ import hihat_electro from "../../assets/sounds/hihat/hihat-electro.wav";
 import hihat_plain from "../../assets/sounds/hihat/hihat-plain.wav";
 import hihat_reso from "../../assets/sounds/hihat/hihat-reso.wav";
 import hihat_ring from "../../assets/sounds/hihat/hihat-ring.wav";
-import { ISound } from "./importAllSounds";
+import { ISound } from "../../types/types";
 
 const allHiHatSounds: ISound[] = [
   { name: "hihat_808", url: hihat_808 },

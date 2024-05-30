@@ -5,3 +5,8 @@ export interface ITrack {
   effects: Record<string, Reverb | Distortion>;
   sampler: Sampler;
 }
+
+export interface ISound {
+  name: string;
+  url: string;
+}
