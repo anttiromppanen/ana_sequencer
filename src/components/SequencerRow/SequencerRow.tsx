@@ -64,6 +64,8 @@ function SequencerRow({
     if (!track) return;
 
     const trackRefFiltered = tracksRef.filter((x) => x.id !== track.id);
+    stepsRef.current = stepsRef.current.splice(track.id, 1);
+
     const updatedTrackIds = trackRefFiltered.map((x, i) => ({
       ...x,
       id: i,
@@ -145,7 +147,7 @@ function SequencerRow({
                   stepsRef.current[trackId][stepId] = elm;
                 }}
                 className={`
-                  appearance-none rounded-md opacity-50 transition-all
+                  cursor-pointer appearance-none rounded-md opacity-50 transition-all
                   checked:opacity-100 checked:!brightness-125 hover:opacity-85
                   ${colors[colorIndex]}`}
               />
