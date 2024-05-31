@@ -13,7 +13,7 @@ module.exports = {
         userGray7: "#696969",
         userSidebarBg: "#525252",
         userSequenceButtonBlue: "#00bbf9",
-        userSequenceButtonMint: "#00f5d4",
+        userSequenceButtonMint: "#04d9bc",
         userSequenceButtonYellow: "#fee440",
         userSequenceButtonPink: "#f15bb5",
         userSequenceButtonPurple: "#9b5de5",

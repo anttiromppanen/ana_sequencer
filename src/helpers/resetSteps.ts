@@ -9,6 +9,7 @@ const resetSteps = (
   Object.values(stepsRef.current).forEach((x) =>
     x.forEach((y) => {
       y.style.filter = "brightness(1)"; // default brightness -- same value as in Sequence useEffect
+      y.style.opacity = "0.5"; // default opacity -- same value as in Sequence useEffect
       y.checked = false;
     }),
   );

@@ -2,7 +2,7 @@ import {
   dropTargetForElements,
   monitorForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { PauseIcon, PlayIcon } from "@heroicons/react/16/solid";
+import { ArrowPathIcon, PauseIcon, PlayIcon } from "@heroicons/react/16/solid";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as Tone from "tone";
 import SequencerRow from "./components/SequencerRow/SequencerRow";
@@ -56,9 +56,11 @@ function App() {
             trk.sampler.triggerAttack("A1", time);
           }
 
-          if (!sequencerColumnButton.checked)
-            sequencerColumnButton.style.filter = "brightness(1.5)";
-          else sequencerColumnButton.style.background = "rgba(255,255,255,0.9)";
+          if (!sequencerColumnButton.checked) {
+            sequencerColumnButton.style.filter = "brightness(1.2)";
+            sequencerColumnButton.style.opacity = "0.8";
+          } else
+            sequencerColumnButton.style.background = "rgba(255,255,255,0.9)";
 
           return undefined;
         });
@@ -69,9 +71,10 @@ function App() {
               step - 1
             ] as HTMLInputElement;
 
-            if (!previousSequencerButton.checked)
+            if (!previousSequencerButton.checked) {
               previousSequencerButton.style.filter = "brightness(1)";
-            else previousSequencerButton.style.background = "";
+              previousSequencerButton.style.opacity = "0.5";
+            } else previousSequencerButton.style.background = "";
           });
         } else {
           // If we are at step 0, reset the last step's background color
@@ -80,9 +83,10 @@ function App() {
               stepIds.length - 1
             ] as HTMLInputElement;
 
-            if (!lastColumnSequencerButton.checked)
+            if (!lastColumnSequencerButton.checked) {
               lastColumnSequencerButton.style.filter = "brightness(1)";
-            else lastColumnSequencerButton.style.background = "";
+              lastColumnSequencerButton.style.opacity = "0.5";
+            } else lastColumnSequencerButton.style.background = "";
           });
         }
       },
@@ -158,7 +162,7 @@ function App() {
           <button
             type="button"
             onClick={handleStartClick}
-            className="flex h-[44px] w-[112px] items-center justify-center gap-x-1 rounded-md transition-colors hover:bg-userGray8"
+            className="flex h-[44px] w-[112px] items-center justify-center gap-x-2 rounded-md transition-colors hover:bg-userGray8"
           >
             {isPlaying ? (
               <PauseIcon className="size-5" />
@@ -170,8 +174,9 @@ function App() {
           <button
             type="button"
             onClick={() => resetSteps(stepsRef, setIsPlaying)}
-            className="flex h-[44px] w-[112px] items-center justify-center gap-x-1 rounded-md transition-colors hover:bg-userGray8"
+            className="flex h-[44px] w-[112px] items-center justify-center gap-x-2 rounded-md transition-colors hover:bg-userGray8"
           >
+            <ArrowPathIcon className="size-5" />
             Reset
           </button>
         </div>

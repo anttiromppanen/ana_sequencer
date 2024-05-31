@@ -143,7 +143,7 @@ function SequencerRow({
                 }}
                 className={`
                   cursor-pointer appearance-none rounded-md opacity-50 transition-all
-                  checked:opacity-100 checked:!brightness-125 hover:opacity-85
+                  checked:!opacity-100 checked:!brightness-125 hover:!opacity-85
                   ${colors[colorIndex]}`}
               />
             );
