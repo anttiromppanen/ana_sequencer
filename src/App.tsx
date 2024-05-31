@@ -151,7 +151,7 @@ function App() {
   };
 
   return (
-    <div className="grid min-h-screen w-full grid-cols-[250px_1fr] text-slate-200">
+    <div className="grid h-screen w-full grid-cols-[250px_1fr] text-slate-200">
       {/* SIDEBAR */}
       <Sidebar />
       <div

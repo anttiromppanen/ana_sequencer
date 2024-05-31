@@ -1,10 +1,6 @@
-import { useEffect, useRef, useState } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import {
-  FolderIcon,
-  MusicalNoteIcon,
-  FolderOpenIcon,
-} from "@heroicons/react/16/solid";
+import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
+import { useEffect, useRef, useState } from "react";
 import allSounds from "../../helpers/sounds/importAllSounds";
 import { ISound } from "../../types/types";
 
@@ -28,7 +24,7 @@ function DraggableListItem({ name, url }: { name: string; url: string }) {
   return (
     <li
       ref={listItemRef}
-      className={`cursor-pointer ${dragging && "opacity-20"}`}
+      className={`peer w-full cursor-pointer py-1 text-sm transition-all hover:pl-0.5 hover:brightness-200 ${dragging && "opacity-20"}`}
     >
       {name}
     </li>
@@ -43,21 +39,20 @@ function ListItem({ name, sounds }: { name: string; sounds: ISound[] }) {
       <button
         type="button"
         onClick={() => setIsSublistOpen((state) => !state)}
-        className="flex items-center gap-x-1 p-2"
+        className={`flex w-full items-center justify-between gap-x-1 p-1 px-4 py-2 hover:bg-userGray9 ${isSublistOpen && "bg-userGray9"}`}
       >
-        {isSublistOpen ? (
-          <FolderIcon className="size-4 text-userSequenceButtonYellow/80" />
-        ) : (
-          <FolderOpenIcon className="size-4 text-userSequenceButtonYellow/90" />
-        )}
         {name}
+        {isSublistOpen && <ChevronDownIcon className="size-6" />}
       </button>
       {isSublistOpen && (
-        <ul className="-mt-2 ml-4 text-base">
+        <ul className="-mt-1 py-2 text-base font-medium">
           {sounds.map(({ name: soundName, url }) => (
-            <div key={soundName} className="flex items-center gap-x-2">
-              <MusicalNoteIcon className="size-3" />
+            <div
+              key={soundName}
+              className="relative ml-4 flex items-center gap-x-2 border-l border-l-neutral-400 pl-5"
+            >
               <DraggableListItem key={soundName} name={soundName} url={url} />
+              <ChevronRightIcon className="pointer-events-none absolute right-2 top-1/2 hidden size-5 -translate-y-1/2 cursor-pointer peer-hover:flex" />
             </div>
           ))}
         </ul>
@@ -68,7 +63,7 @@ function ListItem({ name, sounds }: { name: string; sounds: ISound[] }) {
 
 function Sidebar() {
   return (
-    <div className="flex flex-col bg-userGray8 p-3 text-lg">
+    <div className="no-scrollbar flex select-none flex-col overflow-y-scroll bg-userGray8 p-2 pt-5 font-semibold text-slate-200">
       <ul>
         {allSounds.map(([name, sounds]) => (
           <ListItem
@@ -77,8 +72,6 @@ function Sidebar() {
             sounds={sounds as ISound[]}
           />
         ))}
-        {/*
-         */}
       </ul>
     </div>
   );

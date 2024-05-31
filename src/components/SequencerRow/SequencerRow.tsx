@@ -84,8 +84,8 @@ function SequencerRow({
               type="button"
               onClick={() => setShowEffectPanel((state) => !state)}
               className="
-            rounded-md px-2 py-1 font-medium text-neutral-200
-            hover:brightness-125
+            w-full rounded-md py-1 text-left font-medium
+            text-neutral-200 transition-all hover:pl-2 hover:brightness-125
             "
             >
               <p className="">{name}</p>
@@ -96,7 +96,7 @@ function SequencerRow({
                 type="button"
                 aria-label="Remove instrument"
                 onClick={handleRemoveTrack}
-                className="flex items-center justify-center rounded-md bg-userSidebarBg p-1.5 text-red-400"
+                className="group flex items-center justify-center rounded-md bg-userSidebarBg p-1.5 text-red-400 transition-all hover:brightness-125"
               >
                 <XMarkIcon className="size-4" />
               </button>
@@ -104,7 +104,7 @@ function SequencerRow({
                 type="button"
                 aria-label="change color"
                 onClick={handleGetNextColor}
-                className="size-7 rounded-md bg-userSidebarBg p-1.5"
+                className="size-7 rounded-md bg-userSidebarBg p-1.5 transition-all hover:brightness-125"
               >
                 <PaintBrushIcon className={iconColors[colorIndex]} />
               </button>
@@ -121,7 +121,7 @@ function SequencerRow({
               max={20}
               value={volumeValue}
               onChange={(e) => setVolumeValue(Number(e.target.value))}
-              className="w-full [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-userGray9"
+              className="w-full cursor-pointer [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-userGray9"
             />
           </div>
         </div>
