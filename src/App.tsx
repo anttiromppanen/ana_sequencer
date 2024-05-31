@@ -13,6 +13,7 @@ import {
 } from "./helpers/createNewTracks";
 import { ISoundPack } from "./helpers/importSounds";
 import { ITrack } from "./types/types";
+import resetSteps from "./helpers/resetSteps";
 
 const numOfSteps = 36;
 
@@ -153,11 +154,11 @@ function App() {
         ref={draggableContainerRef}
         className={`flex w-full flex-col gap-y-1 overflow-y-scroll pb-20 pt-4 ${isDraggedOver && "bg-userGray9/95 brightness-150"}`}
       >
-        <div className="ml-2 px-4 py-2 text-xl font-medium">
+        <div className="flex gap-x-2 px-4 text-xl font-medium">
           <button
             type="button"
             onClick={handleStartClick}
-            className="flex items-center gap-x-1"
+            className="flex h-[44px] w-[112px] items-center justify-center gap-x-1 rounded-md transition-colors hover:bg-userGray8"
           >
             {isPlaying ? (
               <PauseIcon className="size-5" />
@@ -165,6 +166,13 @@ function App() {
               <PlayIcon className="size-5" />
             )}
             {isPlaying ? "Pause" : "Play"}
+          </button>
+          <button
+            type="button"
+            onClick={() => resetSteps(stepsRef, setIsPlaying)}
+            className="flex h-[44px] w-[112px] items-center justify-center gap-x-1 rounded-md transition-colors hover:bg-userGray8"
+          >
+            Reset
           </button>
         </div>
         <div className="flex flex-col gap-y-2 bg-userGray9 p-4">
