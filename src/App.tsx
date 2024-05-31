@@ -7,16 +7,19 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as Tone from "tone";
 import SequencerRow from "./components/SequencerRow/SequencerRow";
 import Sidebar from "./components/Sidebar/Sidebar";
-import { ISoundPack, soundPack1 as samples } from "./helpers/importSounds";
+import {
+  createInitialTracks,
+  createNewTrackFromSound,
+} from "./helpers/createNewTracks";
+import { ISoundPack } from "./helpers/importSounds";
 import { ITrack } from "./types/types";
 
 const numOfSteps = 36;
 
 function App() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [activeSamples, setActiveSamples] = useState(samples);
   const [isDraggedOver, setIsDraggedOver] = useState(false);
-  const tracksRef = useRef<ITrack[]>([]); // holds the instrument tracks and effects for track
+  const [tracksRef, setTracksRef] = useState<ITrack[]>([]); // holds the instrument tracks and effects for track
   const stepsRef = useRef<HTMLInputElement[][]>([[]]); // holds the grid track buttons for each row
   const seqRef = useRef<Tone.Sequence | null>(null); // holds the sequencer
   const draggableContainerRef = useRef(null);
@@ -35,31 +38,15 @@ function App() {
   };
 
   useEffect(() => {
-    // tone.js sampler
-    tracksRef.current = activeSamples.map((sample, i) => {
-      const reverb = new Tone.Reverb({ decay: 0.5, wet: 0 }).toDestination();
-      const distortion = new Tone.Distortion({
-        distortion: 0.5,
-        wet: 0,
-      }).toDestination();
+    setTracksRef(createInitialTracks());
+  }, []);
 
-      return {
-        id: i,
-        effects: { Reverb: reverb, Distortion: distortion },
-        sampler: new Tone.Sampler({
-          urls: {
-            A1: sample.url,
-          },
-          volume: -10,
-        }).fan(reverb, distortion),
-      };
-    });
-
+  useEffect(() => {
     // tone.js sequence loop
     seqRef.current = new Tone.Sequence(
       (time, step) => {
         // loops the sequencer buttons by column
-        tracksRef.current.map((trk) => {
+        tracksRef.map((trk) => {
           const sequencerColumnButton = stepsRef.current[trk.id][
             step
           ] as HTMLInputElement;
@@ -76,7 +63,7 @@ function App() {
         });
 
         if (step > 0) {
-          tracksRef.current.forEach((trk) => {
+          tracksRef.forEach((trk) => {
             const previousSequencerButton = stepsRef.current[trk.id][
               step - 1
             ] as HTMLInputElement;
@@ -87,7 +74,7 @@ function App() {
           });
         } else {
           // If we are at step 0, reset the last step's background color
-          tracksRef.current.forEach((trk) => {
+          tracksRef.forEach((trk) => {
             const lastColumnSequencerButton = stepsRef.current[trk.id][
               stepIds.length - 1
             ] as HTMLInputElement;
@@ -106,10 +93,10 @@ function App() {
 
     return () => {
       seqRef.current?.dispose();
-      tracksRef.current.map((trk) => trk.sampler.dispose());
     };
-  }, [stepIds, activeSamples]);
+  }, [stepIds, tracksRef]);
 
+  // add new sound when dragged over
   useEffect(
     () =>
       monitorForElements({
@@ -120,16 +107,31 @@ function App() {
             return;
           }
 
-          const names = activeSamples.map((x) => x.name);
+          const names = tracksRef.map((x) => x.name);
           if (names.includes(source.data.name as string)) return;
 
-          setActiveSamples((state) => [...state, source.data] as ISoundPack[]);
+          const newSound = source.data as unknown as ISoundPack;
+
+          const updatedTrackIds = tracksRef.map((track, i) => ({
+            ...track,
+            id: i,
+          }));
+
+          const newTrackId =
+            updatedTrackIds.length > 0
+              ? updatedTrackIds[updatedTrackIds.length - 1].id + 1
+              : 0;
+
+          const newTrack = createNewTrackFromSound(newSound, newTrackId);
+
+          setTracksRef((state) => [...state, newTrack]);
         },
       }),
 
-    [activeSamples],
+    [tracksRef],
   );
 
+  // toggle isDraggedOver state when dragged over parent element
   useEffect(() => {
     const el = draggableContainerRef.current;
 
@@ -144,7 +146,7 @@ function App() {
   }, []);
 
   const updateSamplerVolume = (id: number, volume: number) => {
-    const track = tracksRef.current.find((trk) => trk.id === id);
+    const track = tracksRef.find((trk) => trk.id === id);
     if (track) {
       track.sampler.volume.value = volume;
     }
@@ -173,13 +175,14 @@ function App() {
           </button>
         </div>
         <div className="flex flex-col gap-y-2 bg-userGray9 p-4">
-          {activeSamples.map(({ name }, trackId) => (
+          {tracksRef.map(({ name, id: trackId }) => (
             <SequencerRow
               key={name}
               name={name}
               stepIds={stepIds}
               stepsRef={stepsRef}
               tracksRef={tracksRef}
+              setTracksRef={setTracksRef}
               trackId={trackId}
               updateSamplerVolume={updateSamplerVolume}
             />

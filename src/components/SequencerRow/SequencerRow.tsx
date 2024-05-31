@@ -4,7 +4,13 @@ import {
   SpeakerWaveIcon,
   XMarkIcon,
 } from "@heroicons/react/16/solid";
-import { MutableRefObject, useEffect, useState } from "react";
+import {
+  Dispatch,
+  MutableRefObject,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { ITrack } from "../../types/types";
 import EffectPanel from "./EffectPanel";
 
@@ -12,7 +18,8 @@ interface Props {
   name: string;
   stepIds: readonly number[];
   stepsRef: MutableRefObject<HTMLInputElement[][]>;
-  tracksRef: MutableRefObject<ITrack[]>;
+  tracksRef: ITrack[];
+  setTracksRef: Dispatch<SetStateAction<ITrack[]>>;
   trackId: number;
   updateSamplerVolume: (id: number, volume: number) => void;
 }
@@ -41,6 +48,7 @@ function SequencerRow({
   trackId,
   stepsRef,
   tracksRef,
+  setTracksRef,
   updateSamplerVolume,
 }: Props) {
   const [colorIndex, setColorIndex] = useState(0);
@@ -52,8 +60,17 @@ function SequencerRow({
   };
 
   const handleRemoveTrack = () => {
-    const trackRefFiltered = tracksRef.current.filter((x) => x.id !== trackId);
-    console.log(trackRefFiltered);
+    const track = tracksRef.find((x) => x.id === trackId);
+    if (!track) return;
+
+    const trackRefFiltered = tracksRef.filter((x) => x.id !== track.id);
+    const updatedTrackIds = trackRefFiltered.map((x, i) => ({
+      ...x,
+      id: i,
+    }));
+
+    setTracksRef(updatedTrackIds);
+    track.sampler.dispose();
   };
 
   useEffect(() => {

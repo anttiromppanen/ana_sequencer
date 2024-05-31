@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { MutableRefObject, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Distortion, Reverb } from "tone";
 import { ITrack } from "../../types/types";
 
@@ -69,10 +69,9 @@ function EffectPanel({
   tracksRef,
 }: {
   trackId: number;
-  tracksRef: MutableRefObject<ITrack[]>;
+  tracksRef: ITrack[];
 }) {
-  const currentTrack =
-    tracksRef.current && tracksRef.current.find((x) => x.id === trackId);
+  const currentTrack = tracksRef && tracksRef.find((x) => x.id === trackId);
 
   if (!currentTrack?.effects) return undefined;
 
