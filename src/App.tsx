@@ -16,9 +16,9 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeSamples, setActiveSamples] = useState(samples);
   const [isDraggedOver, setIsDraggedOver] = useState(false);
-  const tracksRef = useRef<ITrack[]>([]);
-  const stepsRef = useRef<HTMLInputElement[][]>([[]]);
-  const seqRef = useRef<Tone.Sequence | null>(null);
+  const tracksRef = useRef<ITrack[]>([]); // holds the instrument tracks and effects for track
+  const stepsRef = useRef<HTMLInputElement[][]>([[]]); // holds the grid track buttons for each row
+  const seqRef = useRef<Tone.Sequence | null>(null); // holds the sequencer
   const draggableContainerRef = useRef(null);
 
   const stepIds = useMemo(() => [...Array(numOfSteps).keys()] as const, []);

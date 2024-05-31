@@ -1,5 +1,9 @@
 /* eslint-disable no-param-reassign */
-import { PaintBrushIcon, SpeakerWaveIcon } from "@heroicons/react/16/solid";
+import {
+  PaintBrushIcon,
+  SpeakerWaveIcon,
+  XMarkIcon,
+} from "@heroicons/react/16/solid";
 import { MutableRefObject, useEffect, useState } from "react";
 import { ITrack } from "../../types/types";
 import EffectPanel from "./EffectPanel";
@@ -47,6 +51,11 @@ function SequencerRow({
     setColorIndex((state) => (state + 1 < colors.length ? state + 1 : 0));
   };
 
+  const handleRemoveTrack = () => {
+    const trackRefFiltered = tracksRef.current.filter((x) => x.id !== trackId);
+    console.log(trackRefFiltered);
+  };
+
   useEffect(() => {
     updateSamplerVolume(trackId, Number(volumeValue));
   }, [updateSamplerVolume, volumeValue, trackId]);
@@ -67,15 +76,27 @@ function SequencerRow({
             >
               <p className="">{name}</p>
             </button>
-            <button
-              type="button"
-              aria-label="change color"
-              onClick={handleGetNextColor}
-              className="size-7 rounded-md bg-userSidebarBg p-1.5"
-            >
-              <PaintBrushIcon className={iconColors[colorIndex]} />
-            </button>
+            {/* REMOVE & CHANGE COLOR BUTTONS */}
+            <div className="flex gap-x-2">
+              <button
+                type="button"
+                aria-label="Remove instrument"
+                onClick={handleRemoveTrack}
+                className="flex items-center justify-center rounded-md bg-userSidebarBg p-1.5 text-red-400"
+              >
+                <XMarkIcon className="size-4" />
+              </button>
+              <button
+                type="button"
+                aria-label="change color"
+                onClick={handleGetNextColor}
+                className="size-7 rounded-md bg-userSidebarBg p-1.5"
+              >
+                <PaintBrushIcon className={iconColors[colorIndex]} />
+              </button>
+            </div>
           </div>
+          {/* VOLUME SLIDER */}
           <div className="flex gap-x-2 px-2">
             <SpeakerWaveIcon className="size-6" />
             <input
