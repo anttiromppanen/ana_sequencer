@@ -20,7 +20,7 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isDraggedOver, setIsDraggedOver] = useState(false);
   const [tracksRef, setTracksRef] = useState<ITrack[]>([]); // holds the instrument tracks and effects for track
-  const stepsRef = useRef<HTMLInputElement[][]>([[]]); // holds the grid track buttons for each row
+  const stepsRef = useRef<Record<string, HTMLInputElement[]>>({}); // holds the grid track buttons for each row
   const seqRef = useRef<Tone.Sequence | null>(null); // holds the sequencer
   const draggableContainerRef = useRef(null);
 
@@ -112,15 +112,8 @@ function App() {
 
           const newSound = source.data as unknown as ISoundPack;
 
-          const updatedTrackIds = tracksRef.map((track, i) => ({
-            ...track,
-            id: i,
-          }));
-
           const newTrackId =
-            updatedTrackIds.length > 0
-              ? updatedTrackIds[updatedTrackIds.length - 1].id + 1
-              : 0;
+            tracksRef.length > 0 ? tracksRef[tracksRef.length - 1].id + 1 : 0;
 
           const newTrack = createNewTrackFromSound(newSound, newTrackId);
 

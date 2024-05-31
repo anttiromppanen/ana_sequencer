@@ -17,7 +17,7 @@ import EffectPanel from "./EffectPanel";
 interface Props {
   name: string;
   stepIds: readonly number[];
-  stepsRef: MutableRefObject<HTMLInputElement[][]>;
+  stepsRef: MutableRefObject<Record<string, HTMLInputElement[]>>;
   tracksRef: ITrack[];
   setTracksRef: Dispatch<SetStateAction<ITrack[]>>;
   trackId: number;
@@ -64,14 +64,9 @@ function SequencerRow({
     if (!track) return;
 
     const trackRefFiltered = tracksRef.filter((x) => x.id !== track.id);
-    stepsRef.current = stepsRef.current.splice(track.id, 1);
+    delete stepsRef.current[track.id];
 
-    const updatedTrackIds = trackRefFiltered.map((x, i) => ({
-      ...x,
-      id: i,
-    }));
-
-    setTracksRef(updatedTrackIds);
+    setTracksRef(trackRefFiltered);
     track.sampler.dispose();
   };
 
