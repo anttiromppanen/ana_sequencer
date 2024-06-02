@@ -56,15 +56,19 @@ function App() {
             trk.sampler.triggerAttack("A1", time);
           }
 
+          // current column note highlighting
           if (!sequencerColumnButton.checked) {
             sequencerColumnButton.style.filter = "brightness(1.2)";
             sequencerColumnButton.style.opacity = "0.8";
-          } else
-            sequencerColumnButton.style.background = "rgba(255,255,255,0.9)";
+          } else {
+            sequencerColumnButton.style.boxShadow =
+              "0 0 50px 3px rgba(255,255,255,1)";
+          }
 
           return undefined;
         });
 
+        // reset previous column highlighting
         if (step > 0) {
           tracksRef.forEach((trk) => {
             const previousSequencerButton = stepsRef.current[trk.id][
@@ -74,7 +78,9 @@ function App() {
             if (!previousSequencerButton.checked) {
               previousSequencerButton.style.filter = "brightness(1)";
               previousSequencerButton.style.opacity = "0.5";
-            } else previousSequencerButton.style.background = "";
+            } else {
+              previousSequencerButton.style.boxShadow = "";
+            }
           });
         } else {
           // If we are at step 0, reset the last step's background color
@@ -86,7 +92,9 @@ function App() {
             if (!lastColumnSequencerButton.checked) {
               lastColumnSequencerButton.style.filter = "brightness(1)";
               lastColumnSequencerButton.style.opacity = "0.5";
-            } else lastColumnSequencerButton.style.background = "";
+            } else {
+              lastColumnSequencerButton.style.boxShadow = "0";
+            }
           });
         }
       },

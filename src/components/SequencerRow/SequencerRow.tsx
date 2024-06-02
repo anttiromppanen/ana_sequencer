@@ -13,6 +13,8 @@ import {
 } from "react";
 import { ITrack } from "../../types/types";
 import EffectPanel from "./EffectPanel";
+import SequencerNote from "../SequencerNote";
+import { colors, iconColors } from "../../const/colors";
 
 interface Props {
   name: string;
@@ -23,24 +25,6 @@ interface Props {
   trackId: number;
   updateSamplerVolume: (id: number, volume: number) => void;
 }
-
-const colors = [
-  "bg-stone-500",
-  "bg-userSequenceButtonBlue",
-  "bg-userSequenceButtonMint",
-  "bg-userSequenceButtonPink",
-  "bg-userSequenceButtonPurple",
-  "bg-userSequenceButtonYellow",
-];
-
-const iconColors = [
-  "text-stone-500",
-  "text-userSequenceButtonBlue",
-  "text-userSequenceButtonMint",
-  "text-userSequenceButtonPink",
-  "text-userSequenceButtonPurple",
-  "text-userSequenceButtonYellow",
-];
 
 function SequencerRow({
   name,
@@ -130,22 +114,30 @@ function SequencerRow({
           {stepIds.map((stepId) => {
             const id = `${trackId}-${stepId}`;
             return (
-              <input
+              <SequencerNote
                 key={id}
                 id={id}
-                type="checkbox"
-                ref={(elm) => {
-                  if (!elm) return;
-                  if (!stepsRef.current[trackId]) {
-                    stepsRef.current[trackId] = [];
-                  }
-                  stepsRef.current[trackId][stepId] = elm;
-                }}
-                className={`
-                  cursor-pointer appearance-none rounded-md opacity-50 transition-all
-                  checked:!opacity-100 checked:!brightness-125 hover:!opacity-85
-                  ${colors[colorIndex]}`}
+                stepId={stepId}
+                stepsRef={stepsRef}
+                trackId={trackId}
+                colorIndex={colorIndex}
               />
+              //  <input
+              //  key={id}
+              //  id={id}
+              //    type="checkbox"
+              //    ref={(elm) => {
+              //      if (!elm) return;
+              //      if (!stepsRef.current[trackId]) {
+              //        stepsRef.current[trackId] = [];
+              //      }
+              //      stepsRef.current[trackId][stepId] = elm;
+              //    }}
+              //    className={`
+              //          cursor-pointer appearance-none rounded-md opacity-50 transition-all
+              //          checked:!opacity-100 checked:!brightness-125 hover:!opacity-85
+              //          ${colors[colorIndex]}`}
+              //          />
             );
           })}
         </div>
