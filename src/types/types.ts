@@ -1,3 +1,4 @@
+import { MutableRefObject } from "react";
 import { Distortion, Reverb, Sampler } from "tone";
 
 export interface ITrack {
@@ -11,3 +12,13 @@ export interface ISound {
   name: string;
   url: string;
 }
+
+export type StepsRefType = MutableRefObject<
+  Record<
+    string,
+    {
+      volume: number;
+      element: HTMLInputElement;
+    }[]
+  >
+>;

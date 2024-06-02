@@ -4,22 +4,16 @@ import {
   SpeakerWaveIcon,
   XMarkIcon,
 } from "@heroicons/react/16/solid";
-import {
-  Dispatch,
-  MutableRefObject,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
-import { ITrack } from "../../types/types";
-import EffectPanel from "./EffectPanel";
-import SequencerNote from "../SequencerNote";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { colors, iconColors } from "../../const/colors";
+import { ITrack, StepsRefType } from "../../types/types";
+import SequencerNote from "../SequencerNote";
+import EffectPanel from "./EffectPanel";
 
 interface Props {
   name: string;
   stepIds: readonly number[];
-  stepsRef: MutableRefObject<Record<string, HTMLInputElement[]>>;
+  stepsRef: StepsRefType;
   tracksRef: ITrack[];
   setTracksRef: Dispatch<SetStateAction<ITrack[]>>;
   trackId: number;
@@ -122,22 +116,6 @@ function SequencerRow({
                 trackId={trackId}
                 colorIndex={colorIndex}
               />
-              //  <input
-              //  key={id}
-              //  id={id}
-              //    type="checkbox"
-              //    ref={(elm) => {
-              //      if (!elm) return;
-              //      if (!stepsRef.current[trackId]) {
-              //        stepsRef.current[trackId] = [];
-              //      }
-              //      stepsRef.current[trackId][stepId] = elm;
-              //    }}
-              //    className={`
-              //          cursor-pointer appearance-none rounded-md opacity-50 transition-all
-              //          checked:!opacity-100 checked:!brightness-125 hover:!opacity-85
-              //          ${colors[colorIndex]}`}
-              //          />
             );
           })}
         </div>

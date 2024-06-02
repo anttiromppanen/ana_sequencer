@@ -1,16 +1,11 @@
 /* eslint-disable no-param-reassign */
-import {
-  MouseEventHandler,
-  MutableRefObject,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { MouseEventHandler, useCallback, useEffect, useState } from "react";
 import { colorsAsRgba } from "../const/colors";
+import { StepsRefType } from "../types/types";
 
 interface Props {
   id: string;
-  stepsRef: MutableRefObject<Record<string, HTMLInputElement[]>>;
+  stepsRef: StepsRefType;
   trackId: number;
   stepId: number;
   colorIndex: number;
@@ -54,7 +49,9 @@ function SequencerNote({ id, stepsRef, trackId, stepId, colorIndex }: Props) {
     };
 
     // Stop the drag operation now.
-    const onEnd = () => setStartVal(0);
+    const onEnd = () => {
+      setStartVal(0);
+    };
 
     document.addEventListener("mousemove", onUpdate);
     document.addEventListener("mouseup", onEnd);
@@ -76,7 +73,10 @@ function SequencerNote({ id, stepsRef, trackId, stepId, colorIndex }: Props) {
         if (!stepsRef.current[trackId]) {
           stepsRef.current[trackId] = [];
         }
-        stepsRef.current[trackId][stepId] = elm;
+        stepsRef.current[trackId][stepId] = {
+          volume: volumeValue / 100,
+          element: elm,
+        };
       }}
       className={`  
         cursor-pointer appearance-none rounded-md opacity-50 transition-all

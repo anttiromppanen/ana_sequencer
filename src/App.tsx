@@ -21,7 +21,10 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isDraggedOver, setIsDraggedOver] = useState(false);
   const [tracksRef, setTracksRef] = useState<ITrack[]>([]); // holds the instrument tracks and effects for track
-  const stepsRef = useRef<Record<string, HTMLInputElement[]>>({}); // holds the grid track buttons for each row
+  // const stepsRef = useRef<Record<string, HTMLInputElement[]>>({}); // holds the grid track buttons for each row
+  const stepsRef = useRef<
+    Record<number, { volume: number; element: HTMLInputElement }[]>
+  >({}); // holds the grid track buttons for each row
   const seqRef = useRef<Tone.Sequence | null>(null); // holds the sequencer
   const draggableContainerRef = useRef(null);
 
@@ -48,12 +51,12 @@ function App() {
       (time, step) => {
         // loops the sequencer buttons by column
         tracksRef.map((trk) => {
-          const sequencerColumnButton = stepsRef.current[trk.id][
-            step
-          ] as HTMLInputElement;
-
+          const sequencerColumnButton = stepsRef.current[trk.id][step]
+            .element as HTMLInputElement;
+          const sequencerNoteTime = stepsRef.current[trk.id][step].volume;
+          console.log(sequencerNoteTime);
           if (sequencerColumnButton.checked) {
-            trk.sampler.triggerAttack("A1", time);
+            trk.sampler.triggerAttack("A1", time, sequencerNoteTime);
           }
 
           // current column note highlighting
@@ -71,9 +74,8 @@ function App() {
         // reset previous column highlighting
         if (step > 0) {
           tracksRef.forEach((trk) => {
-            const previousSequencerButton = stepsRef.current[trk.id][
-              step - 1
-            ] as HTMLInputElement;
+            const previousSequencerButton = stepsRef.current[trk.id][step - 1]
+              .element as HTMLInputElement;
 
             if (!previousSequencerButton.checked) {
               previousSequencerButton.style.filter = "brightness(1)";
@@ -87,7 +89,7 @@ function App() {
           tracksRef.forEach((trk) => {
             const lastColumnSequencerButton = stepsRef.current[trk.id][
               stepIds.length - 1
-            ] as HTMLInputElement;
+            ].element as HTMLInputElement;
 
             if (!lastColumnSequencerButton.checked) {
               lastColumnSequencerButton.style.filter = "brightness(1)";

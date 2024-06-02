@@ -1,16 +1,17 @@
 /* eslint-disable no-param-reassign */
-import { Dispatch, MutableRefObject, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 import * as Tone from "tone";
+import { StepsRefType } from "../types/types";
 
 const resetSteps = (
-  stepsRef: MutableRefObject<Record<string, HTMLInputElement[]>>,
+  stepsRef: StepsRefType,
   setIsPlaying: Dispatch<SetStateAction<boolean>>,
 ) => {
   Object.values(stepsRef.current).forEach((x) =>
     x.forEach((y) => {
-      y.style.filter = "brightness(1)"; // default brightness -- same value as in Sequence useEffect
-      y.style.opacity = "0.5"; // default opacity -- same value as in Sequence useEffect
-      y.checked = false;
+      y.element.style.filter = "brightness(1)"; // default brightness -- same value as in Sequence useEffect
+      y.element.style.opacity = "0.5"; // default opacity -- same value as in Sequence useEffect
+      y.element.checked = false;
     }),
   );
 
