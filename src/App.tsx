@@ -54,7 +54,7 @@ function App() {
           const sequencerColumnButton = stepsRef.current[trk.id][step]
             .element as HTMLInputElement;
           const sequencerNoteTime = stepsRef.current[trk.id][step].volume;
-          console.log(sequencerNoteTime);
+
           if (sequencerColumnButton.checked) {
             trk.sampler.triggerAttack("A1", time, sequencerNoteTime);
           }
