@@ -62,46 +62,50 @@ function App() {
             trk.sampler.triggerAttack("A1", time, sequencerNoteTime);
           }
 
-          // current column note highlighting
-          if (!sequencerColumnButton.checked) {
-            sequencerColumnButton.style.filter = "brightness(1.2)";
-            sequencerColumnButton.style.opacity = "0.8";
-          } else {
-            sequencerColumnButton.style.boxShadow =
-              "0 0 50px 3px rgba(255,255,255,1)";
-          }
+          Tone.getDraw().schedule(() => {
+            // current column note highlighting
+            if (!sequencerColumnButton.checked) {
+              sequencerColumnButton.style.filter = "brightness(1.2)";
+              sequencerColumnButton.style.opacity = "0.8";
+            } else {
+              sequencerColumnButton.style.boxShadow =
+                "0 0 50px 3px rgba(255,255,255,1)";
+            }
+          }, time);
 
           return undefined;
         });
 
-        // reset previous column highlighting
-        if (step > 0) {
-          tracksRef.forEach((trk) => {
-            const previousSequencerButton = stepsRef.current[trk.id][step - 1]
-              .element as HTMLInputElement;
+        Tone.getDraw().schedule(() => {
+          // reset previous column highlighting
+          if (step > 0) {
+            tracksRef.forEach((trk) => {
+              const previousSequencerButton = stepsRef.current[trk.id][step - 1]
+                .element as HTMLInputElement;
 
-            if (!previousSequencerButton.checked) {
-              previousSequencerButton.style.filter = "brightness(1)";
-              previousSequencerButton.style.opacity = "0.5";
-            } else {
-              previousSequencerButton.style.boxShadow = "none";
-            }
-          });
-        } else {
-          // If we are at step 0, reset the last step's background color
-          tracksRef.forEach((trk) => {
-            const lastColumnSequencerButton = stepsRef.current[trk.id][
-              stepIds.length - 1
-            ].element as HTMLInputElement;
+              if (!previousSequencerButton.checked) {
+                previousSequencerButton.style.filter = "brightness(1)";
+                previousSequencerButton.style.opacity = "0.5";
+              } else {
+                previousSequencerButton.style.boxShadow = "none";
+              }
+            });
+          } else {
+            // If we are at step 0, reset the last step's background color
+            tracksRef.forEach((trk) => {
+              const lastColumnSequencerButton = stepsRef.current[trk.id][
+                stepIds.length - 1
+              ].element as HTMLInputElement;
 
-            if (!lastColumnSequencerButton.checked) {
-              lastColumnSequencerButton.style.filter = "brightness(1)";
-              lastColumnSequencerButton.style.opacity = "0.5";
-            } else {
-              lastColumnSequencerButton.style.boxShadow = "none";
-            }
-          });
-        }
+              if (!lastColumnSequencerButton.checked) {
+                lastColumnSequencerButton.style.filter = "brightness(1)";
+                lastColumnSequencerButton.style.opacity = "0.5";
+              } else {
+                lastColumnSequencerButton.style.boxShadow = "none";
+              }
+            });
+          }
+        }, time);
       },
       [...stepIds],
       "16n",
