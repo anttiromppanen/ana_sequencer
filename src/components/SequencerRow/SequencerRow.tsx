@@ -6,9 +6,10 @@ import {
 } from "@heroicons/react/16/solid";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { colors, iconColors } from "../../const/colors";
-import { ITrack, StepsRefType } from "../../types/types";
-import SequencerNote from "../SequencerNote";
+import { ITrack, StepValuesType, StepsRefType } from "../../types/types";
 import EffectPanel from "./EffectPanel";
+import SequencerNote from "./SequencerNote";
+import useGlobalsStore from "../../store/globalsStore";
 
 interface Props {
   name: string;
@@ -20,6 +21,12 @@ interface Props {
   updateSamplerVolume: (id: number, volume: number) => void;
 }
 
+const gridFractions: Record<StepValuesType, string> = {
+  8: "grid-cols-[repeat(8,1fr)]",
+  16: "grid-cols-[repeat(16,1fr)]",
+  32: "grid-cols-[repeat(32,1fr)]",
+};
+
 function SequencerRow({
   name,
   stepIds,
@@ -29,6 +36,7 @@ function SequencerRow({
   setTracksRef,
   updateSamplerVolume,
 }: Props) {
+  const { stepAmount } = useGlobalsStore((state) => state);
   const [colorIndex, setColorIndex] = useState(0);
   const [showEffectPanel, setShowEffectPanel] = useState(false);
   const [volumeValue, setVolumeValue] = useState(-10);
@@ -104,7 +112,7 @@ function SequencerRow({
           </div>
         </div>
         {/* RIGHT SIDE SEQUENCER BUTTONS */}
-        <div className="grid grid-cols-[repeat(36,1fr)] gap-1.5">
+        <div className={`grid gap-1.5 ${gridFractions[stepAmount]}`}>
           {stepIds.map((stepId) => {
             const id = `${trackId}-${stepId}`;
             return (

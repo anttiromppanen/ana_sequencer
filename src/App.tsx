@@ -7,28 +7,31 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as Tone from "tone";
 import SequencerRow from "./components/SequencerRow/SequencerRow";
 import Sidebar from "./components/Sidebar/Sidebar";
+import StepAmountSelector from "./components/StepAmountSelector";
 import {
   createInitialTracks,
   createNewTrackFromSound,
 } from "./helpers/createNewTracks";
 import { ISoundPack } from "./helpers/importSounds";
-import { ITrack } from "./types/types";
 import resetSteps from "./helpers/resetSteps";
-
-const numOfSteps = 36;
+import { ITrack } from "./types/types";
+import useGlobalsStore from "./store/globalsStore";
 
 function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isDraggedOver, setIsDraggedOver] = useState(false);
+  const { stepAmount } = useGlobalsStore((state) => state);
   const [tracksRef, setTracksRef] = useState<ITrack[]>([]); // holds the instrument tracks and effects for track
-  // const stepsRef = useRef<Record<string, HTMLInputElement[]>>({}); // holds the grid track buttons for each row
   const stepsRef = useRef<
     Record<number, { volume: number; element: HTMLInputElement }[]>
   >({}); // holds the grid track buttons for each row
   const seqRef = useRef<Tone.Sequence | null>(null); // holds the sequencer
   const draggableContainerRef = useRef(null);
 
-  const stepIds = useMemo(() => [...Array(numOfSteps).keys()] as const, []);
+  const stepIds = useMemo(
+    () => [...Array(stepAmount).keys()] as const,
+    [stepAmount],
+  );
 
   const handleStartClick = async () => {
     if (Tone.getTransport().state === "started") {
@@ -81,7 +84,7 @@ function App() {
               previousSequencerButton.style.filter = "brightness(1)";
               previousSequencerButton.style.opacity = "0.5";
             } else {
-              previousSequencerButton.style.boxShadow = "";
+              previousSequencerButton.style.boxShadow = "none";
             }
           });
         } else {
@@ -95,7 +98,7 @@ function App() {
               lastColumnSequencerButton.style.filter = "brightness(1)";
               lastColumnSequencerButton.style.opacity = "0.5";
             } else {
-              lastColumnSequencerButton.style.boxShadow = "0";
+              lastColumnSequencerButton.style.boxShadow = "none";
             }
           });
         }
@@ -162,35 +165,39 @@ function App() {
 
   return (
     <div className="grid h-screen w-full grid-cols-[250px_1fr] text-slate-200">
-      {/* SIDEBAR */}
       <Sidebar />
       <div
         ref={draggableContainerRef}
         className={`flex w-full flex-col gap-y-1 overflow-y-scroll pb-20 pt-4 ${isDraggedOver && "bg-userGray9/95 brightness-150"}`}
       >
-        <div className="flex gap-x-2 px-4 text-xl font-medium">
-          <button
-            type="button"
-            onClick={handleStartClick}
-            className="flex h-[44px] w-[112px] items-center justify-center gap-x-2 rounded-md transition-colors hover:bg-userGray8"
-          >
-            {isPlaying ? (
-              <PauseIcon className="size-5" />
-            ) : (
-              <PlayIcon className="size-5" />
-            )}
-            {isPlaying ? "Pause" : "Play"}
-          </button>
-          <button
-            type="button"
-            onClick={() => resetSteps(stepsRef, setIsPlaying)}
-            className="flex h-[44px] w-[112px] items-center justify-center gap-x-2 rounded-md transition-colors hover:bg-userGray8"
-          >
-            <ArrowPathIcon className="size-5" />
-            Reset
-          </button>
+        {/* TOP NAV */}
+        <div className="flex justify-between gap-x-2 px-4 pr-10 text-xl font-medium">
+          <div className="flex">
+            <button
+              type="button"
+              onClick={handleStartClick}
+              className="flex h-[44px] w-[112px] items-center justify-center gap-x-2 rounded-md transition-colors hover:bg-userGray8"
+            >
+              {isPlaying ? (
+                <PauseIcon className="size-5" />
+              ) : (
+                <PlayIcon className="size-5" />
+              )}
+              {isPlaying ? "Pause" : "Play"}
+            </button>
+            <button
+              type="button"
+              onClick={() => resetSteps(stepsRef, setIsPlaying)}
+              className="flex h-[44px] w-[112px] items-center justify-center gap-x-2 rounded-md transition-colors hover:bg-userGray8"
+            >
+              <ArrowPathIcon className="size-5" />
+              Reset
+            </button>
+          </div>
+          {/* STEPS AMOUNT SELECTOR */}
+          <StepAmountSelector />
         </div>
-        <div className="flex flex-col gap-y-2 bg-userGray9 p-4">
+        <div className="flex flex-col gap-y-2 overflow-x-auto overflow-y-hidden bg-userGray9 p-4">
           {tracksRef.map(({ name, id: trackId }) => (
             <SequencerRow
               key={name}

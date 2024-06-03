@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { MouseEventHandler, useCallback, useEffect, useState } from "react";
-import { colorsAsRgba } from "../const/colors";
-import { StepsRefType } from "../types/types";
+import { colorsAsRgba } from "../../const/colors";
+import { StepsRefType } from "../../types/types";
 
 interface Props {
   id: string;

@@ -22,3 +22,5 @@ export type StepsRefType = MutableRefObject<
     }[]
   >
 >;
+
+export type StepValuesType = 8 | 16 | 32;
